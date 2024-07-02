@@ -26,6 +26,7 @@ class AuthController {
         where: { email: body.email },
       });
       if (!user) throw new NotFoundException("User not found");
+      if (!user.isActive) throw new BadRequestException("Pending approval");
       if (user.password != body.password)
         throw new BadRequestException("Invalid credentials");
 

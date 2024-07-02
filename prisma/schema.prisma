@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   isActive  Boolean  @default(false)
@@ -15,6 +20,7 @@ model User {
   username  String
   email     String   @unique
   password  String
+  role      UserRole @default(USER)
   session   Session?
 }
 

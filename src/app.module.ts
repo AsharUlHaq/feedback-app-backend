@@ -4,8 +4,9 @@ import { HttpStatus } from "./utils/http-status.util";
 
 import { authRoutes } from "./modules/auth/auth.route";
 import { userRoutes } from "./modules/user/user.route";
+import { adminRoutes } from "./modules/admin/admin.route";
 
-const routesArray: Router[] = [authRoutes, userRoutes];
+const routesArray: Router[] = [authRoutes, userRoutes, adminRoutes];
 
 export class AppModule {
   static init(app: Express) {

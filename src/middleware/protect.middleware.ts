@@ -1,5 +1,4 @@
 import type { Handler } from "express";
-import { BadRequestException } from "../utils/exception.util";
 import { jwtService } from "../modules/jwt/jwt.service";
 import { User } from "@prisma/client";
 import { ResponseMapper } from "../common/mapper/response.mapper";
