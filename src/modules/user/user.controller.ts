@@ -12,8 +12,8 @@ class UserController {
   getUserDetailHandler: Handler = async (req, res, next) => {
     try {
       const userId = req.userId;
-      const user = await userService.findOneById(userId);
-      const userWithoutPassword = commonService.exclude(user!, ["password"]);
+      const user = (await userService.findOneById(userId))!;
+      const userWithoutPassword = commonService.exclude(user, ["password"]);
 
       const refreshToken = await jwtService.signPayload(
         userWithoutPassword,
