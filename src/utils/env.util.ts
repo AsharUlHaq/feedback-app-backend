@@ -9,8 +9,10 @@ const envSchema = z.object({
   PORT: z.string().default("5000"),
   NODE_ENV: z.enum(["production", "development"]).default("development"),
   DATABASE_URL: z.string(),
-  ACCESS_SECRET: z.string(),
-  ACCESS_EXP: z.string(),
+  JWT_ACCESS_SECRET: z.string(),
+  JWT_ACCESS_EXP: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
+  JWT_REFRESH_EXP: z.string(),
 });
 
 function envInitializer() {

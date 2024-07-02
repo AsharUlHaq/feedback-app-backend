@@ -4,6 +4,7 @@ import { jwtService } from "../modules/jwt/jwt.service";
 import { User } from "@prisma/client";
 import { ResponseMapper } from "../common/mapper/response.mapper";
 import { HttpStatus } from "../utils/http-status.util";
+import { JWT_TYPE } from "../modules/jwt/enum/jwt.enum";
 
 export const protect: Handler = async (req, res, next) => {
   try {
@@ -14,7 +15,10 @@ export const protect: Handler = async (req, res, next) => {
     const [, token] = authHeader.split(" ");
     if (!token) throw new Error();
 
-    const payload = (await jwtService.verifyToken(token)) as User;
+    const payload = (await jwtService.verifyToken(
+      token,
+      JWT_TYPE.ACCESS
+    )) as User;
     req["userId"] = payload.id;
 
     next();

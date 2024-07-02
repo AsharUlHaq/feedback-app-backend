@@ -7,13 +7,18 @@ const authRoutes = Router();
 
 authRoutes.post(
   "/auth/sign-in",
-  validateSchema(AuthSchema.loginSchema, "body"),
-  async (...obj) => await authController.loginHandler(...obj)
+  validateSchema(AuthSchema.loginSchema),
+  async (...args) => authController.loginHandler(...args)
 );
 authRoutes.post(
   "/auth/sign-up",
-  validateSchema(AuthSchema.signupSchema, "body"),
-  async (...obj) => await authController.signupHandler(...obj)
+  validateSchema(AuthSchema.signupSchema),
+  async (...args) => authController.signupHandler(...args)
+);
+authRoutes.post(
+  "/auth/refresh",
+  validateSchema(AuthSchema.refreshSchema),
+  async (...args) => authController.refreshAccessHandler(...args)
 );
 
 export { authRoutes };
