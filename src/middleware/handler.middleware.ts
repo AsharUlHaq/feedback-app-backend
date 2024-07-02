@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 export const handlerMiddleware = (
-  func: (
+  handler: (
     req: Request,
     res: Response,
     next: NextFunction
@@ -9,9 +9,8 @@ export const handlerMiddleware = (
 ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const response = await func(req, res, next);
+      const response = await handler(req, res, next);
       return res.status(response.status).json(response);
-      return;
     } catch (error) {
       next(error);
     }
