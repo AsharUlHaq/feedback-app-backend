@@ -1,4 +1,4 @@
-import type { Handler } from "express";
+import type { Request } from "express";
 import type { User } from "@prisma/client";
 import type { AuthTypes } from "./auth.schema";
 
@@ -19,7 +19,7 @@ import { JWT_TYPE } from "../jwt/enum/jwt.enum";
 class AuthController {
   private readonly logger = LoggerService(AuthController.name);
 
-  public loginHandler: Handler = async (req, res, next) => {
+  async loginHandler(req: Request) {
     try {
       const body = req.body as AuthTypes.Login;
       const user = await userService.findUnique({
@@ -43,16 +43,15 @@ class AuthController {
       await authService.upsert({ userId: user.id, refreshToken });
 
       return ResponseMapper.map({
-        res,
         data: { user: userWithoutPassword, accessToken, refreshToken },
       });
     } catch (error: any) {
       this.logger.error(error.message);
-      next(error);
+      throw error;
     }
-  };
+  }
 
-  public signupHandler: Handler = async (req, res, next) => {
+  async signupHandler(req: Request) {
     try {
       const body = req.body as AuthTypes.Signup;
       const user = await userService.findUnique({
@@ -68,14 +67,14 @@ class AuthController {
         },
       });
 
-      return ResponseMapper.map({ res, message: "Registered Successfully" });
+      return ResponseMapper.map({ message: "Registered Successfully" });
     } catch (error: any) {
       this.logger.error(error.message);
-      next(error);
+      throw error;
     }
-  };
+  }
 
-  public refreshAccessHandler: Handler = async (req, res, next) => {
+  async refreshAccessHandler(req: Request) {
     try {
       const body = req.body as AuthTypes.Refresh;
       const session = await authService.findOneByRefreshToken(
@@ -99,14 +98,13 @@ class AuthController {
       );
 
       return ResponseMapper.map({
-        res,
         data: { user: userWithoutPassword, refreshToken, accessToken },
       });
     } catch (error: any) {
       this.logger.error(error.message);
-      next(error);
+      throw error;
     }
-  };
+  }
 }
 
 export const authController =

@@ -4,6 +4,7 @@ import { AdminSchema } from "./admin.schema";
 import { adminController } from "./admin.controller";
 import { protect } from "../../middleware/protect.middleware";
 import { adminMiddleware } from "../../middleware/admin.middleware";
+import { handlerMiddleware } from "../../middleware/handler.middleware";
 
 export const adminRoutes = Router()
   .use(protect)
@@ -11,5 +12,5 @@ export const adminRoutes = Router()
   .post(
     "/admin/toggle-user-status",
     validateSchema(AdminSchema.toggleUserStatusSchema),
-    (...args) => adminController.userStatusToggleHandler(...args)
+    handlerMiddleware(adminController.userStatusToggleHandler)
   );

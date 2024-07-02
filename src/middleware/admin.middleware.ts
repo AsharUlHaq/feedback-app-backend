@@ -11,10 +11,11 @@ export const adminMiddleware: Handler = async (req, res, next) => {
 
     next();
   } catch (error: any) {
-    ResponseMapper.map({
-      res,
-      status: HttpStatus.FORBIDDEN,
-      message: "Admin access only",
-    });
+    return res.status(HttpStatus.FORBIDDEN).json(
+      ResponseMapper.map({
+        status: HttpStatus.FORBIDDEN,
+        message: "Admin access only",
+      })
+    );
   }
 };

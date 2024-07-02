@@ -11,12 +11,15 @@ const routesArray: Router[] = [authRoutes, userRoutes, adminRoutes];
 export class AppModule {
   static init(app: Express) {
     routesArray.forEach((eachRouter) => app.use("/api/", eachRouter));
-    app.use("*", (req, res) =>
-      ResponseMapper.map({
-        res,
-        status: HttpStatus.NOT_FOUND,
-        message: HttpStatus.NOT_FOUND_MESSAGE,
-      })
-    );
+    app.use("*", (req, res) => {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json(
+          ResponseMapper.map({
+            message: HttpStatus.NOT_FOUND_MESSAGE,
+            status: HttpStatus.NOT_FOUND,
+          })
+        );
+    });
   }
 }

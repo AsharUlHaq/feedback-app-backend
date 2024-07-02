@@ -2,23 +2,24 @@ import { Router } from "express";
 import { authController } from "./auth.controller";
 import { validateSchema } from "../../middleware/validate.middleware";
 import { AuthSchema } from "./auth.schema";
+import { handlerMiddleware } from "../../middleware/handler.middleware";
 
 const authRoutes = Router();
 
 authRoutes.post(
   "/auth/sign-in",
   validateSchema(AuthSchema.loginSchema),
-  async (...args) => authController.loginHandler(...args)
+  handlerMiddleware(authController.loginHandler)
 );
 authRoutes.post(
   "/auth/sign-up",
   validateSchema(AuthSchema.signupSchema),
-  async (...args) => authController.signupHandler(...args)
+  handlerMiddleware(authController.signupHandler)
 );
 authRoutes.post(
   "/auth/refresh",
   validateSchema(AuthSchema.refreshSchema),
-  async (...args) => authController.refreshAccessHandler(...args)
+  handlerMiddleware(authController.refreshAccessHandler)
 );
 
 export { authRoutes };

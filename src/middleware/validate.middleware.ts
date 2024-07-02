@@ -13,11 +13,12 @@ export const validateSchema = (
       schema.parse(req[dataPath]);
       next();
     } catch (error: any) {
-      return ResponseMapper.map({
-        res,
-        message: zodErrorMapper(error),
-        status: HttpStatus.BAD_REQUEST,
-      });
+      return res.status(HttpStatus.BAD_REQUEST).json(
+        ResponseMapper.map({
+          message: zodErrorMapper(error),
+          status: HttpStatus.BAD_REQUEST,
+        })
+      );
     }
   };
 };

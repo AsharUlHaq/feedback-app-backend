@@ -1,4 +1,4 @@
-import type { Handler } from "express";
+import type { Request } from "express";
 import type { AdminTypes } from "./admin.schema";
 import { commonService } from "../common/common.service";
 import { LoggerService } from "../../utils/logger.util";
@@ -13,7 +13,7 @@ import { $Enums } from "@prisma/client";
 class AdminController {
   private readonly logger = LoggerService(AdminController.name);
 
-  userStatusToggleHandler: Handler = async (req, res, next) => {
+  async userStatusToggleHandler(req: Request) {
     try {
       const body = req.body as AdminTypes.ToggleUserStatus;
       const user = await userService.findOneById(body.id);
@@ -26,12 +26,12 @@ class AdminController {
         where: { id: body.id },
       });
 
-      return ResponseMapper.map({ res });
+      return ResponseMapper.map();
     } catch (error: any) {
       this.logger.error(error.message);
-      next(error);
+      throw error;
     }
-  };
+  }
 }
 
 export const adminController =

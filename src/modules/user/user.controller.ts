@@ -1,4 +1,4 @@
-import type { Handler } from "express";
+import type { Request } from "express";
 import { LoggerService } from "../../utils/logger.util";
 import { commonService } from "../common/common.service";
 import { ResponseMapper } from "../../common/mapper/response.mapper";
@@ -9,7 +9,7 @@ import { JWT_TYPE } from "../jwt/enum/jwt.enum";
 class UserController {
   private readonly logger = LoggerService(UserController.name);
 
-  getUserDetailHandler: Handler = async (req, res, next) => {
+  async getUserDetailHandler(req: Request) {
     try {
       const userId = req.userId;
       const user = (await userService.findOneById(userId))!;
@@ -21,14 +21,13 @@ class UserController {
       );
 
       return ResponseMapper.map({
-        res,
         data: { user: userWithoutPassword, refreshToken },
       });
     } catch (error: any) {
       this.logger.error(error.message);
-      next(error);
+      throw error;
     }
-  };
+  }
 }
 
 export const userController =

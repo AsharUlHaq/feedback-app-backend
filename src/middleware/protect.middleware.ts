@@ -22,10 +22,11 @@ export const protect: Handler = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return ResponseMapper.map({
-      res,
-      status: HttpStatus.UNAUTHORIZED,
-      message: HttpStatus.UNAUTHORIZED_MESSAGE,
-    });
+    return res.status(HttpStatus.UNAUTHORIZED).json(
+      ResponseMapper.map({
+        status: HttpStatus.UNAUTHORIZED,
+        message: HttpStatus.UNAUTHORIZED_MESSAGE,
+      })
+    );
   }
 };
