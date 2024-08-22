@@ -2,6 +2,30 @@ import prisma from "../../utils/db.util";
 import { Prisma } from "@prisma/client";
 import * as XLSX from "xlsx";
 import { createObjectCsvWriter } from "csv-writer";
+import axios from "axios";
+
+// Get all feedbacks with their IDs and feedback property only
+export async function getAllFeedbacksWithIds() {
+  const feedbacks = await prisma.feedback.findMany({
+    select: {
+      id: true,
+      feedback: true,
+    },
+  });
+  return feedbacks;
+}
+
+// Get feedback property by ID
+export async function getFeedbackPropertyById(id: number) {
+  const feedback = await prisma.feedback.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      feedback: true,
+    },
+  });
+  return feedback;
+}
 
 // Find feedback by ID
 export async function findFeedbackById(id: number) {
@@ -12,7 +36,7 @@ export async function findFeedbackById(id: number) {
   } catch (error: any) {
     if (error.code === "P2025") {
       // Record not found
-      return null;
+      throw new Error("Record not found");
     }
     throw error;
   }
@@ -130,3 +154,165 @@ export async function exportFeedbackToCSV() {
 
   return "./exports/feedbacks.csv";
 }
+
+// export const createFeedbackWithAnalysis = async (
+//   data: Prisma.FeedbackUncheckedCreateInput
+// ) => {
+//   try {
+//     // Step 1: Save feedback to the database
+//     const feedback = await prisma.feedback.create({
+//       data,
+//     });
+
+//     // Step 2: Send feedback to AI server for sentiment analysis
+//     const response = await axios.post(
+//       "http://192.168.100.135:5000/analyze-sentiment",
+//       {
+//         feedback: data.feedback,
+//       }
+//     );
+
+//     // Extract sentiment analysis from the response
+//     const analysis = response.data.Sentiment;
+
+//     // Step 3: Save the analysis to the database
+//     await prisma.analysis.create({
+//       data: {
+//         feedbackId: feedback.id,
+//         analysis,
+//       },
+//     });
+
+//     // Return the saved feedback along with its analysis
+//     const feedbackWithAnalysis = await prisma.feedback.findUnique({
+//       where: { id: feedback.id },
+//       include: { Analysis: true },
+//     });
+
+//     return feedbackWithAnalysis;
+//   } catch (error) {
+//     console.error("Error analyzing and saving feedback:", error);
+//     throw new Error("Failed to analyze and save feedback");
+//   }
+// };
+
+// // Service to create feedback and save analysis
+// export const createFeedbackWithAnalysis = async (
+//   data: Prisma.FeedbackUncheckedCreateInput
+// ) => {
+//   try {
+//     // Step 1: Save feedback to the database
+//     const feedback = await prisma.feedback.create({
+//       data,
+//     });
+
+//     // Step 2: Send feedback to AI server for sentiment analysis
+//     const response = await axios.post(
+//       "http://192.168.100.135:5000/analyze-sentiment",
+//       {
+//         feedback: data.feedback,
+//       }
+//     );
+
+//     // Extract sentiment analysis from the response
+//     const analysis = response.data.Sentiment as string; // Ensure it's a string
+
+//     // Validate the analysis string
+//     if (!analysis) {
+//       throw new Error("Sentiment analysis result is missing");
+//     }
+
+//     // Step 3: Save the analysis to the database
+//     await prisma.analysis.create({
+//       data: {
+//         feedbackId: feedback.id,
+//         analysis,
+//       },
+//     });
+
+//     // Return the saved feedback along with its analysis
+//     const feedbackWithAnalysis = await prisma.feedback.findUnique({
+//       where: { id: feedback.id },
+//       include: { Analysis: true },
+//     });
+
+//     return feedbackWithAnalysis;
+//   } catch (error: any) {
+//     console.error("Error analyzing and saving feedback:", error);
+
+//     // Enhanced error logging
+//     if (error.response) {
+//       console.error("Response data:", error.response.data);
+//       console.error("Response status:", error.response.status);
+//       console.error("Response headers:", error.response.headers);
+//     } else if (error.request) {
+//       console.error("Request data:", error.request);
+//     } else {
+//       console.error("Error message:", error.message);
+//     }
+
+//     throw new Error("Failed to analyze and save feedback");
+//   }
+// };
+
+// Service to create feedback and save analysis
+export const createFeedbackWithAnalysis = async (
+  data: Prisma.FeedbackUncheckedCreateInput
+) => {
+  try {
+    // Step 1: Save feedback to the database
+    const feedback = await prisma.feedback.create({
+      data,
+    });
+
+    // Step 2: Send feedback to AI server for sentiment analysis
+    const response = await axios.post(
+      "http://192.168.100.135:5000/analyze-sentiment",
+      {
+        feedback: data.feedback,
+      }
+    );
+
+    // Log the full response to inspect its structure
+    console.log("API Response:", response.data);
+
+    // Extract sentiment analysis from the response
+    const analysis = response.data.Analysis;
+
+    // Validate the analysis string
+    if (!analysis) {
+      throw new Error("Sentiment analysis result is missing");
+    }
+
+    // Step 3: Save the analysis to the database
+    await prisma.analysis.create({
+      data: {
+        feedbackId: feedback.id,
+        analysis,
+      },
+    });
+
+    // Return the saved feedback along with its analysis
+    const feedbackWithAnalysis = await prisma.feedback.findUnique({
+      where: { id: feedback.id },
+      include: { Analysis: true },
+    });
+
+    return feedbackWithAnalysis;
+  } catch (error: any) {
+    console.error("Error analyzing and saving feedback:", error);
+
+    // Enhanced error logging
+    if (error.response) {
+      console.error("Response data:", error.response.data);
+      console.error("Response status:", error.response.status);
+      console.error("Response headers:", error.response.headers);
+    } else if (error.request) {
+      console.error("Request data:", error.request);
+    } else {
+      console.error("Error message:", error.message);
+    }
+
+    throw new Error("Failed to analyze and save feedback");
+  }
+};

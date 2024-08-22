@@ -16,5 +16,13 @@ feedbackRoutes.delete(
 );
 feedbackRoutes.get("/export/excel", feedbackController.exportFeedbackToExcel);
 feedbackRoutes.get("/export/csv", feedbackController.exportFeedbackToCSV);
+feedbackRoutes.get(
+  "/feedbacks-with-ids",
+  feedbackController.getAllFeedbacksWithIds
+);
+feedbackRoutes.get(
+  "/feedback-property/:id",
+  feedbackController.getFeedbackPropertyById
+);
 
 export { feedbackRoutes };

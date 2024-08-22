@@ -5,11 +5,60 @@ import * as feedbackService from "./fb.service";
 import { CreateFeedbackSchema } from "./fb.schema";
 import { ZodError } from "zod";
 
+// Get all feedback properties with their IDs only
+export const getAllFeedbacksWithIds = async (req: Request, res: Response) => {
+  try {
+    const feedbacks = await feedbackService.getAllFeedbacksWithIds();
+    res.status(200).json({
+      status: 200,
+      message: "success",
+      data: feedbacks,
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Failed to retrieve feedbacks",
+      data: null,
+      success: false,
+    });
+  }
+};
+
+// Get feedback property by ID
+export const getFeedbackPropertyById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const feedback = await feedbackService.getFeedbackPropertyById(Number(id));
+    if (feedback) {
+      res.status(200).json({
+        status: 200,
+        message: "success",
+        data: feedback,
+        success: true,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: `Feedback with id ${id} not found`,
+        data: null,
+        success: false,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: "Failed to retrieve feedback",
+      success: false,
+    });
+  }
+};
+
 // Get all feedback
 export const getAllFeedback = async (req: Request, res: Response) => {
   try {
     const feedbacks = await feedbackService.getAllFeedback();
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       message: "success",
       data: feedbacks,
@@ -69,11 +118,47 @@ export const getFeedbackById = async (req: Request, res: Response) => {
 };
 
 // Create new feedback
+// export const createFeedback = async (req: Request, res: Response) => {
+//   try {
+//     // Validate input data
+//     const validatedData = CreateFeedbackSchema.parse(req.body);
+//     const feedback = await feedbackService.createFeedback(validatedData);
+//     res
+//       .status(200)
+//       .json({ status: 200, message: "success", data: feedback, success: true });
+//   } catch (error: any) {
+//     if (error instanceof ZodError) {
+//       const messageJSON = JSON.parse(error.message);
+//       const message = `${messageJSON[0].path[0]} is ${messageJSON[0].message}`;
+//       console.error(message);
+//       return res.status(400).json({
+//         status: 400,
+//         message: message,
+//         data: null,
+//         success: false,
+//       });
+//     }
+//     {
+//       res.status(400).json({
+//         status: 400,
+//         message: error.message || "Failed to create feedback",
+//         data: null,
+//         success: false,
+//       });
+//     }
+//   }
+// };
+
 export const createFeedback = async (req: Request, res: Response) => {
   try {
     // Validate input data
     const validatedData = CreateFeedbackSchema.parse(req.body);
-    const feedback = await feedbackService.createFeedback(validatedData);
+
+    // Analyze and save feedback
+    const feedback = await feedbackService.createFeedbackWithAnalysis(
+      validatedData
+    );
+
     res
       .status(200)
       .json({ status: 200, message: "success", data: feedback, success: true });
@@ -88,11 +173,11 @@ export const createFeedback = async (req: Request, res: Response) => {
         data: null,
         success: false,
       });
-    }
-    {
-      res.status(400).json({
-        status: 400,
-        message: error.message || "Failed to create feedback",
+    } else {
+      console.error("Error in createFeedback:", error.message);
+      res.status(500).json({
+        status: 500,
+        message: "Failed to create feedback with analysis",
         data: null,
         success: false,
       });

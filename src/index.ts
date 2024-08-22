@@ -6,6 +6,7 @@ import { ENV } from "./utils/env.util";
 import { protect } from "./middleware/protect.middleware";
 import { authRoutes } from "./modules/auth/auth.route";
 import { feedbackRoutes } from "./modules/feedback/fb.route";
+import { sentimentalAnalysis } from "./modules/analysis/sentiments/sentiment.route";
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/", authRoutes);
 app.use("/", feedbackRoutes);
+app.use("/", sentimentalAnalysis);
 
 app.listen(ENV.PORT, () => {
   console.log(`Application running at http://localhost:${ENV.PORT}`);
