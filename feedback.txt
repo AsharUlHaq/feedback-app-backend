@@ -1,0 +1,22 @@
+feedback form -> 
+fullName min(3).max(30)
+email max(50)
+country min(3).max(30)
+title min(5).max(50)
+feedback min(5).max(500)
+model -> dropdown.field required -> default/deep search/advance deep search
+how do you know about fynder ? drop down -> facebook, instagram, linkedin, friends, colleagues, other.
+
+i want to create a backend of my project which is AI-Powered Feedback System, in which we take input from user 
+input fields are;
+fullName min(3).max(30)
+email max(50)
+country min(3).max(30)
+title min(5).max(50)
+feedback min(5).max(500)
+which model you used? -> dropdown.field required -> default/deep search/advance deep search
+how do you know about fynder ? drop down -> facebook, instagram, linkedin, friends, colleagues, other.
+
+i also want some basic api like user creation, findonebyuserId, findonebyemail.
+with proper validation and code structure
+each module should divided into route,schema,controller,services

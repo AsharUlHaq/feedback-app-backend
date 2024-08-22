@@ -24,6 +24,56 @@ model User {
   session   Session?
 }
 
+// schema.prisma
+
+model Feedback {
+  id           Int          @id @default(autoincrement())
+  fullName     String       @db.VarChar(30)
+  email        String       @db.VarChar(50)
+  country      String       @db.VarChar(30)
+  title        String       @db.VarChar(50)
+  feedback     String       @db.VarChar(500)
+  modelUsed    ModelUsed
+  fynderSource FynderSource
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @default(now()) @updatedAt
+  Analysis     Analysis?
+
+  @@index([email])
+}
+
+model Analysis {
+  id         Int          @id @default(autoincrement())
+  feedback   Feedback     @relation(fields: [feedbackId], references: [id])
+  analysis   AnalysisType
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  feedbackId Int          @unique
+}
+
+enum ModelUsed {
+  DEFAULT
+  DEEP_SEARCH
+  ADVANCED_DEEP_SEARCH
+}
+
+enum FynderSource {
+  FACEBOOK
+  INSTAGRAM
+  LINKEDIN
+  FRIENDS
+  COLLEAGUES
+  OTHER
+}
+
+enum AnalysisType {
+  BAD
+  VERY_BAD
+  GOOD
+  VERY_GOOD
+  NEUTRAL
+}
+
 model Session {
   userId       Int    @id
   user         User   @relation(fields: [userId], references: [id])
