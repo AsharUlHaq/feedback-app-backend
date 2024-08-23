@@ -51,6 +51,16 @@ model Analysis {
   feedbackId Int          @unique
 }
 
+model Summary {
+  id              Int      @id @default(autoincrement())
+  summaryText     String   @db.VarChar(1000) // Adjust length as needed
+  timestamp       DateTime @default(now())
+  feedbackCount   Int
+  wordFrequencies Json // To store the word frequencies
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
 enum ModelUsed {
   DEFAULT
   DEEP_SEARCH
@@ -79,3 +89,84 @@ model Session {
   user         User   @relation(fields: [userId], references: [id])
   refreshToken String @unique
 }
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// enum UserRole {
+//   ADMIN
+//   USER
+// }
+
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   isActive  Boolean  @default(false)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now()) @updatedAt
+//   username  String
+//   email     String   @unique
+//   password  String
+//   role      UserRole @default(USER)
+//   session   Session?
+// }
+
+// model Feedback {
+//   id           Int          @id @default(autoincrement())
+//   fullName     String       @db.VarChar(30)
+//   email        String       @db.VarChar(50)
+//   country      String       @db.VarChar(30)
+//   title        String       @db.VarChar(50)
+//   feedback     String       @db.VarChar(500)
+//   modelUsed    ModelUsed
+//   fynderSource FynderSource
+//   analysis     AnalysisType // Added this field to store the analysis directly in Feedback
+//   createdAt    DateTime     @default(now())
+//   updatedAt    DateTime     @default(now()) @updatedAt
+
+//   @@index([email])
+// }
+
+// model Summary {
+//   id              Int      @id @default(autoincrement())
+//   summaryText     String   @db.VarChar(1000)
+//   timestamp       DateTime @default(now())
+//   feedbackCount   Int
+//   wordFrequencies Json
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @default(now()) @updatedAt
+// }
+
+// enum ModelUsed {
+//   DEFAULT
+//   DEEP_SEARCH
+//   ADVANCED_DEEP_SEARCH
+// }
+
+// enum FynderSource {
+//   FACEBOOK
+//   INSTAGRAM
+//   LINKEDIN
+//   FRIENDS
+//   COLLEAGUES
+//   OTHER
+// }
+
+// enum AnalysisType {
+//   BAD
+//   VERY_BAD
+//   GOOD
+//   VERY_GOOD
+//   NEUTRAL
+// }
+
+// model Session {
+//   userId       Int    @id
+//   user         User   @relation(fields: [userId], references: [id])
+//   refreshToken String @unique
+// }
