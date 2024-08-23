@@ -8,6 +8,7 @@ import { authRoutes } from "./modules/auth/auth.route";
 import { feedbackRoutes } from "./modules/feedback/fb.route";
 import { sentimentalAnalysis } from "./modules/analysis/sentiments/sentiment.route";
 import { summaryRoutes } from "./modules/analysis/summary/summary.route";
+import { generalRoutes } from "./modules/general/general.route";
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use("/", authRoutes);
 app.use("/", feedbackRoutes);
 app.use("/", sentimentalAnalysis);
 app.use("/", summaryRoutes);
+app.use("/", generalRoutes);
 
 app.listen(ENV.PORT, () => {
   console.log(`Application running at http://localhost:${ENV.PORT}`);

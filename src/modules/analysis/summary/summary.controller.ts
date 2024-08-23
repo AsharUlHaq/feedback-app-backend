@@ -27,12 +27,12 @@ export const getFeedbackSummaryController = async (
 ) => {
   try {
     const summary = await getFeedbackSummary();
-    res
+    return res
       .status(200)
       .json({ status: 200, message: "success", data: summary, success: true });
   } catch (error: any) {
-    console.error("Error in getFeedbackSummaryController:", error);
-    res.status(500).json({
+    console.error("Error in getFeedbackSummaryController:", error.message);
+    return res.status(500).json({
       status: 500,
       message: "Failed to get feedback summary",
       data: null,

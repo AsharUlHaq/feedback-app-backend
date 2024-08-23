@@ -16,13 +16,14 @@ export const analyzeFeedbackController = async (
       return res.status(404).json({
         status: 404,
         message: `Feedback with ID ${feedbackId} not found`,
+        data: null,
         success: false,
       });
     }
 
     const analysis = await analyzeFeedback(feedbackId, feedbackText);
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       message: "Sentiment analysis completed and saved",
       data: analysis,
@@ -30,7 +31,7 @@ export const analyzeFeedbackController = async (
     });
   } catch (error: any) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       status: 500,
       message: "An error occurred while analyzing the feedback",
       success: false,
@@ -45,7 +46,7 @@ export const getSentimentCountsController = async (
   try {
     const sentimentCounts = await getSentimentCounts();
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       message: "Sentiment counts retrieved successfully",
       data: sentimentCounts,
@@ -53,7 +54,7 @@ export const getSentimentCountsController = async (
     });
   } catch (error: any) {
     console.error("Error in getSentimentCountsController:", error.message);
-    res.status(500).json({
+    return res.status(500).json({
       status: 500,
       message: "Failed to retrieve sentiment counts",
       data: null,
