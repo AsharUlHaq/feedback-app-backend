@@ -31,8 +31,8 @@ export const analyzeFeedbackController = async (
     });
   } catch (error: any) {
     console.error(error);
-    return res.status(500).json({
-      status: 500,
+    return res.status(400).json({
+      status: 400,
       message: "An error occurred while analyzing the feedback",
       success: false,
     });
@@ -54,8 +54,8 @@ export const getSentimentCountsController = async (
     });
   } catch (error: any) {
     console.error("Error in getSentimentCountsController:", error.message);
-    return res.status(500).json({
-      status: 500,
+    return res.status(400).json({
+      status: 400,
       message: "Failed to retrieve sentiment counts",
       data: null,
       success: false,

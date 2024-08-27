@@ -16,8 +16,8 @@ export const getAllFeedbacksWithIds = async (req: Request, res: Response) => {
       success: true,
     });
   } catch (error) {
-    res.status(500).json({
-      status: 500,
+    res.status(400).json({
+      status: 400,
       message: "Failed to retrieve feedbacks",
       data: null,
       success: false,
@@ -46,8 +46,8 @@ export const getFeedbackPropertyById = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
-      status: 500,
+    res.status(400).json({
+      status: 400,
       message: "Failed to retrieve feedback",
       success: false,
     });
@@ -78,8 +78,8 @@ export const getAllFeedback = async (req: Request, res: Response) => {
     }
   }
   {
-    return res.status(500).json({
-      status: 500,
+    return res.status(400).json({
+      status: 400,
       message: "Failed to retrieve feedbacks",
       data: null,
       success: false,
@@ -108,8 +108,8 @@ export const getFeedbackById = async (req: Request, res: Response) => {
       });
     }
   } catch (error: any) {
-    res.status(500).json({
-      status: 500,
+    res.status(400).json({
+      status: 400,
       message: "Failed to retrieve feedback",
       data: null,
       success: false,
@@ -227,8 +227,16 @@ export const exportFeedbackToExcel = async (req: Request, res: Response) => {
   try {
     const filePath = await feedbackService.exportFeedbackToExcel();
     res.download(filePath, "feedbacks.xlsx");
+    return res
+      .status(200)
+      .json({ status: 200, message: "success", data: null, success: true });
   } catch (error: any) {
-    res.status(500).json({ error: "Failed to export feedbacks to Excel" });
+    res.status(400).json({
+      status: 400,
+      message: "Failed to export feedbacks to Excel",
+      data: null,
+      success: false,
+    });
   }
 };
 
@@ -237,7 +245,15 @@ export const exportFeedbackToCSV = async (req: Request, res: Response) => {
   try {
     const filePath = await feedbackService.exportFeedbackToCSV();
     res.download(filePath, "feedbacks.csv");
+    return res
+      .status(200)
+      .json({ status: 200, message: "success", data: null, success: true });
   } catch (error: any) {
-    res.status(500).json({ error: "Failed to export feedbacks to CSV" });
+    res.status(400).json({
+      status: 400,
+      message: "Failed to export feedbacks to CSV",
+      data: null,
+      success: false,
+    });
   }
 };
