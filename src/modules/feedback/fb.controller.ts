@@ -175,8 +175,8 @@ export const createFeedback = async (req: Request, res: Response) => {
       });
     } else {
       console.error("Error in createFeedback:", error.message);
-      res.status(500).json({
-        status: 500,
+      res.status(400).json({
+        status: 400,
         message: "Failed to create feedback with analysis",
         data: null,
         success: false,

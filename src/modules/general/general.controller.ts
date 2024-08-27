@@ -14,8 +14,8 @@ export const getFeedbackWithAnalysisController = async (
       success: true,
     });
   } catch (error: any) {
-    return res.status(500).json({
-      status: 500,
+    return res.status(400).json({
+      status: 400,
       message: "Failed to fetch feedback with analysis",
       data: null,
       success: false,

@@ -20,11 +20,4 @@ export const CreateFeedbackSchema = z.object({
   ]),
 });
 
-// Schema for updating existing feedback
-// export const UpdateFeedbackSchema = z.object({
-//   username: z.string().min(3).max(30).optional(),
-//   avatar: z.string().optional(),
-// });
-
 export type CreateFeedbackInput = z.infer<typeof CreateFeedbackSchema>;
-// export type UpdateFeedbackInput = z.infer<typeof UpdateFeedbackSchema>;
